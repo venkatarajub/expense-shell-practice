@@ -51,5 +51,5 @@ mysql -h mysql.venra.online -u root -pExpenseApp@1 -e 'show databases';
         mysql_secure_installation --set-root-pass ExpenseApp@1
         VALIDATE $? "root password setting up"
     else
-        echo -e "roor password already set. $Y SKIPPING $N"
+        echo -e "root password already set. $Y SKIPPING $N"
     fi
