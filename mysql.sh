@@ -42,9 +42,9 @@ VALIDATE $? "start mysqld"
 mysql -h mysql.venra.online -u root -pExpenseApp@1 -e 'show databases'; &>>$LOG_FILE
 if [ $? -ne 0 ]
 then
-    echo -e "Root password is $R Not set $N. $Y setting $N" | tee -a $LOG_FILE
+    echo -e "Root password is $R Not set up $N. $Y setting now $N" | tee -a $LOG_FILE
     mysql_secure_installation --set-root-pass ExpenseApp@1 &>>$LOG_FILE
-    VALIDATE $? "setting root password"
+    VALIDATE $? "settingup root password"
 else
     echo -e "$G root password already set $N $Y SKIPPING $N" | tee -a $LOG_FILE
 fi
