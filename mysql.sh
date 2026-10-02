@@ -30,12 +30,13 @@ CHECK_ROOT
 
 echo -e "$script execution date: $(date)"
 
-dnf install mysql-server -y 
+dnf install mysql-server -y &>>$LOG_FILE
 VALIDATE $? "install mysql-server"
 
-systemctl enable mysqld 
+systemctl enable mysqld &>>$LOG_FILE
 VALIDATE $? "enable mysqld"
 
-systemctl start mysqld 
+systemctl start mysqld &>>$LOG_FILE
 VALIDATE $? "start mysqld"
 
+mysql_secure_installation --set-root-pass ExpenseApp@1
