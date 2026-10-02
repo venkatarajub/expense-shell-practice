@@ -69,3 +69,15 @@ VALIDATE $? "npm instalation"
 
 cp /home/ec2-user/expense-shell-practice/backend.service /etc/systemd/system/backend.service
 VALIDATE $? "copy backend service"
+
+mysql -h mysql.venra.online -u root -pExpenseApp@1 < /app/schema/backend.sql
+VALIDATE $? "scheama loading"
+
+systemctl daemon-reload
+VALIDATE $? "daemon reload"
+
+systemctl enable backend
+VALIDATE $? "backend enabled"
+
+systemctl restart backend
+VALIDATE $? "backend restart"
