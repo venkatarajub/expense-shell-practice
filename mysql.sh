@@ -35,8 +35,6 @@ CHECK_ROOT
 
 echo "Script executed time: $(date)"
 
-dnf list installed mysql
-
 dnf install mysql-server -y &>> $LOG_FILE
 VALIDATE $? "Installing mysql server"
 
