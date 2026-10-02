@@ -34,3 +34,12 @@ VALIDATE(){
 CHECK_ROOT
 
 echo "Script executed time: $(date)"
+
+dnf module disable nodejs -y
+VALIDATE $? "disabling nodejs"
+
+dnf module enable nodejs:20 -y
+VALIDATE $? "enabling nodejs"
+
+dnf install nodejs -y
+VALIDATE $? "installing nodejs"
