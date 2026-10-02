@@ -35,7 +35,7 @@ VALIDATE $? "enable mysqld"
 systemctl start mysqld 
 VALIDATE $? "start mysqld"
 
-# mysql -h mysql.venra.online -u root -pExpenseApp@1 -e 'show databases'; 
+mysql -h mysql.venra.online -u root -pExpenseApp@1 -e 'show databases'; 
 # if [ $? -ne 0 ]
 # then
 #     echo -e "$Y mysql root password is not. setting $N" &>> $LOG_FILE
