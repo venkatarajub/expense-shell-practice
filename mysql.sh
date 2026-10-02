@@ -39,4 +39,12 @@ VALIDATE $? "enable mysqld"
 systemctl start mysqld &>>$LOG_FILE
 VALIDATE $? "start mysqld"
 
-mysql_secure_installation --set-root-pass ExpenseApp@1
+mysql -h mysql.venra.online -u root -pExpenseApp@1 -e 'show databases';
+if [ $? -ne 0 ]
+then
+    echo -e "Root password is $R Not set $N. $Y setting $N"
+    mysql_secure_installation --set-root-pass ExpenseApp@1
+    VALIDATE $? "setting root password"
+else
+    echo -e "$G root password already set $N $Y SKIPPING $N"
+fi
