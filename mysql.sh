@@ -5,11 +5,12 @@ G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
 
-LOGS-FOLDER="/var/log/expense"
-SCRIPT-NAME=$(echo $0 | cut -d "." -f1)
+LOGS_FOLDER="/var/log/expense"
+mkdir -p $LOGS_FOLDER
+SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
 TIMESTAMP=$(date +%Y-%m-%d-%H-%M-%S)
-LOG-FILE=$LOGS-FOLDER/$SCRIPT-NAME-$TIMESTAMP.log
-mkdir -p $LOGS-FOLDER
+LOG-FILE="$LOGS_FOLDER/$SCRIPT_NAME-$TIMESTAMP.log"
+
 
 USERID=$(id -u)
 CHECK_ROOT(){
