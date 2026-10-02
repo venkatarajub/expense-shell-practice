@@ -12,6 +12,7 @@ TIMESTAMP=$(date +%Y-%m-%d-%H-%M-%S)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME-$TIMESTAMP.log"
 
 USERID=$(id -u)
+
 CHECK_ROOT(){
     if [ $USERID -ne 0 ]
     then
