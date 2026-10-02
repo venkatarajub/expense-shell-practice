@@ -35,11 +35,11 @@ CHECK_ROOT
 
 echo "Script executed time: $(date)"
 
-dnf module disable nodejs -y
+dnf module disable nodejs -y &>> $LOG_FILE
 VALIDATE $? "disabling nodejs"
 
-dnf module enable nodejs:20 -y
+dnf module enable nodejs:20 -y &>> $LOG_FILE
 VALIDATE $? "enabling nodejs"
 
-dnf install nodejs -y
+dnf install nodejs -y &>> $LOG_FILE
 VALIDATE $? "installing nodejs"
