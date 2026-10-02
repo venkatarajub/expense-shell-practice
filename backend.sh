@@ -68,3 +68,4 @@ npm install
 VALIDATE $? "npm instalation"
 
 cp /home/ec2-user/expense-shell-practice/backend.service /etc/systemd/system/backend.service
+VALIDATE $? "copy backend service"
