@@ -9,14 +9,14 @@ LOGS_FOLDER="/var/log/expense"
 mkdir -p $LOGS_FOLDER
 SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
 TIMESTAMP=$(date +%Y-%m-%d-%H-%M-%S)
-LOG-FILE="$LOGS_FOLDER/$SCRIPT_NAME-$TIMESTAMP.log"
+LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME-$TIMESTAMP.log"
 
 
 USERID=$(id -u)
 CHECK_ROOT(){
     if [ $USERID -ne 0 ]
     then
-        echo -e "$Y Run the script with root access $N"
+        echo -e "$Y Run the script with root access $N" | tee -a $LOG_FILE
         exit 1
     fi
 }
