@@ -52,3 +52,19 @@ id expense
     else
         echo -e "expense user already created.. $Y SKIPPING $N" | tee -a $LOG_FILE
     fi
+
+mkdir -p /app
+VALIDATE $? "app dir creating"
+
+curl -o /tmp/backend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
+VALIDATE $? "Downloading backend code"
+
+cd /app
+rm -rf /app/*
+unzip /tmp/backend.zip
+VALIDATE $? "Extracting backend code"
+
+npm install
+VALIDATE $? "npm instalation"
+
+cp /home/ec2-user/expense-shell-practice/backend.service /etc/systemd/system/backend.service
