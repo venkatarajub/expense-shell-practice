@@ -26,11 +26,20 @@ VALIDATE(){
         echo -e "$G $2 success $N " | tee -a $LOG_FILE
     fi
 }
-dnf list installed mysql
+CHECK_ROOT
+dnf install mysql-server -y &>> $LOG_FILE
+VALIDATE $? "install mysql-server"
+systemctl enable mysqld &>> $LOG_FILE
+VALIDATE $? "enable mysqld"
+systemctl start mysqld &>> $LOG_FILE
+VALIDATE $? "start mysqld"
+
+mysql -h mysql.venra.online -u root -pExpenseApp@1 -e 'show databases'; &>> $LOG_FILE
 if [ $? -ne 0 ]
 then
-    dnf install mysql -y >> $LOG_FILE
-    VALIDATE $? "install mysql"
+    echo -e "$Y mysql root password is not. setting $N" &>> $LOG_FILE
+    mysql_secure_installation --set-root-pass ExpenseApp@1 &>> $LOG_FILE
+    VALIDATE $? "setting mysql root password"
 else
-    echo -e "$G Mysal already installed nothing to do. $N" | tee -a $LOG_FILE
-fi
+    echo -e "$G Mysql root password already set $N $Y skipping $N"
+fi 
