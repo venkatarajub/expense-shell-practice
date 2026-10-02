@@ -1,50 +1,44 @@
-#!/bib/bash
+#!/bin/bash
 
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
-LOGS_FOLDER="/var/log/expense"
-SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
+
+LOGS-FOLDER="/var/log/expense"
+SCRIPT-NAME=$(echo $0 | cut -d "." -f1)
 TIMESTAMP=$(date +%Y-%m-%d-%H-%M-%S)
-LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME-$TIMESTAMP.log"
+LOG-FILE=$LOGS-FOLDER/$SCRIPT-NAME-$TIMESTAMP.log
+mkdir -p $LOGS-FOLDER
+
 USERID=$(id -u)
-mkdir -p /var/log/expense
 CHECK_ROOT(){
     if [ $USERID -ne 0 ]
-    then 
-        echo -e "$Y Run the script with root access $N" | tee -a $LOG_FILE
+    then
+        echo -e "$Y Run the script with root access $N"
         exit 1
     fi
 }
+
 VALIDATE(){
     if [ $1 -ne 0 ]
     then
-        echo -e "$R $2 failed. Pls checke $N" | tee -a $LOG_FILE 
-        exit
-    else
-        echo -e "$G $2 success $N " | tee -a $LOG_FILE
+        echo -e "$2 .. is $R FAILED $N. pls check"
+        exit 1
+    else 
+        echo -e "$2 .. is $G SUCESS $N"
     fi
 }
-CHECK_ROOT
 
-echo -e "$script execution date: $(date)" | tee -a $LOG_FILE
+echo "Script executed time: $date"
 
-dnf install mysql-server -y &>>$LOG_FILE
-VALIDATE $? "install mysql-server"
+dnf list installed mysql
 
-systemctl enable mysqld &>>$LOG_FILE
-VALIDATE $? "enable mysqld"
+dnf install mysql-server -y
+VALIDATE $? "Installing mysql server"
 
-systemctl start mysqld &>>$LOG_FILE
-VALIDATE $? "start mysqld"
+systemctl enable mysqld
+VALIDATE $? "enablening mysqld"
 
-mysql -h mysql.venra.online -u root -pExpenseApp@1 -e 'show databases'; &>>$LOG_FILE
-if [ $? -ne 0 ]
-then
-    echo -e "Root password is $R Not set up $N. $Y setting now $N" | tee -a $LOG_FILE
-    mysql_secure_installation --set-root-pass ExpenseApp@1 &>>$LOG_FILE
-    VALIDATE $? "settingup root password"
-else
-    echo -e "$G root password already set $N $Y SKIPPING $N" | tee -a $LOG_FILE
-fi
+systemctl start mysqld
+VALIDATE $? "Starting mysqld"
