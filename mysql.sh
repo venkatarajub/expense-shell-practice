@@ -30,6 +30,8 @@ VALIDATE(){
     fi
 }
 
+CHECK_ROOT
+
 echo "Script executed time: $date"
 
 dnf list installed mysql
