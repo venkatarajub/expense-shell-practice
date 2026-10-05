@@ -44,7 +44,7 @@ VALIDATE $? "enabling nodejs"
 dnf install nodejs -y &>> $LOG_FILE
 VALIDATE $? "installing nodejs"
 
-mkdir /app
+mkdir -p /app
 VALIDATE $? "app dir creating"
 
 id expense
