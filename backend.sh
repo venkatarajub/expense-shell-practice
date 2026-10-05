@@ -64,7 +64,7 @@ VALIDATE $? "npm installed"
 cp /home/ec2-user/expense-shell-practice/backend.service /etc/systemd/system/backend.service
 VALIDATE $? "copy backend service"
 
-dnf install mysql -y
+dnf install mysql -y &>>LOG_FILE
 VALIDATE $? "mysql client install"
 
 mysql -h mysql.venra.online -uroot -pExpenseApp@1 < /app/schema/backend.sql
