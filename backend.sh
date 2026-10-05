@@ -68,8 +68,8 @@ cd /app
 npm install
 VALIDATE $? "npm instalation"
 
-cp /home/ec2-user/expense-shell-practice/backend.service /etc/systemd/system/backend.service $>> $LOG_FILE
-VALIDATE $? "copy backend service"
+cp /home/ec2-user/expense-shell-practice/backend.service /etc/systemd/system/backend.service 
+
 
 dnf install mysql -y &>> $LOG_FILE
 VALIDATE $? "MYSQL client"
