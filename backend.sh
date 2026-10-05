@@ -44,17 +44,17 @@ VALIDATE $? "Install nodejs"
 id expense
     if [ $? -ne 0 ]
     then 
-        echo -e "expense user not available creating"
+        echo -e "expense user not available creating" &>>$LOG_FILE
         useradd expense
         VALIDATE $? "expense user created"
     fi
 mkdir -p /app
 
-curl -o /tmp/backend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
+curl -o /tmp/backend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip &>>$LOG_FILE
 VALIDATE $? "downloading backend code"
 
 cd /app
-unzip /tmp/backend.zip
+unzip /tmp/backend.zip &>>$LOG_FILE
 VALIDATE $? "Extracting backend code"
 
 cd /app
