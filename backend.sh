@@ -74,7 +74,7 @@ VALIDATE $? "npm instalation"
 dnf install mysql -y &>> $LOG_FILE
 VALIDATE $? "MYSQL client"
 
-mysql -h <MYSQL-SERVER-IPADDRESS> -u root -pExpenseApp@1 < /app/schema/backend.sql
+mysql -h mysql.venra.online -u root -pExpenseApp@1 < /app/schema/backend.sql
 VALIDATE $? "scheama loading"
 
 systemctl daemon-reload
