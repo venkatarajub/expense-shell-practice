@@ -1,85 +1,80 @@
 #!/bin/bash
 
+R="\e[31m"
+G="\e[32m"
+Y="\e[33m"
+N="\e[0m"
+
 LOGS_FOLDER="/var/log/expense"
 SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
 TIMESTAMP=$(date +%Y-%m-%d-%H-%M-%S)
-LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME-$TIMESTAMP.log"
+LOG_FILE=$LOGS_FOLDER/$SCRIPT_NAME-$TIMESTAMP.log
 mkdir -p $LOGS_FOLDER
-
 USERID=$(id -u)
-R="\e[31m"
-G="\e[32m"
-N="\e[0m"
-Y="\e[33m"
 
 CHECK_ROOT(){
     if [ $USERID -ne 0 ]
     then
-        echo -e "$R Please run this script with root priveleges $N" | tee -a $LOG_FILE
-        exit 1
+        echo -e "$Y Run the script with root access $N"
     fi
 }
 
 VALIDATE(){
     if [ $1 -ne 0 ]
     then
-        echo -e "$2 is...$R FAILED $N"  | tee -a $LOG_FILE
-        exit 1
+        echo -e "$2 is $R FAILD $N .. Pls check"
     else
-        echo -e "$2 is... $G SUCCESS $N" | tee -a $LOG_FILE
+        echo -e "$2 is $G SUCCESS $N"
     fi
 }
 
-echo "Script started executing at: $(date)" | tee -a $LOG_FILE
-
 CHECK_ROOT
 
-dnf module disable nodejs -y &>>$LOG_FILE
-VALIDATE $? "Disable default nodejs"
+echo "Script start date:$(date)"
 
-dnf module enable nodejs:20 -y &>>$LOG_FILE
-VALIDATE $? "Enable nodejs:20"
+dnf module disable nodejs -y
+VALIDATE $? "nodejs disabled"
 
-dnf install nodejs -y &>>$LOG_FILE
+dnf module enable nodejs:20 -y
+VALIDATE $? "nodejs enabled"
+
+dnf install nodejs -y
 VALIDATE $? "Install nodejs"
 
-id expense &>>$LOG_FILE
-if [ $? -ne 0 ]
-then
-    echo -e "expense user not exists... $G Creating $N"
-    useradd expense &>>$LOG_FILE
-    VALIDATE $? "Creating expense user"
-else
-    echo -e "expense user already exists...$Y SKIPPING $N"
-fi
-
+id expense
+    if [ $? -ne 0 ]
+    then 
+        echo -e "expense user not available creating"
+        useradd expense
+        VALIDATE $? "expense user created"
+    fi
 mkdir -p /app
-VALIDATE $? "Creating /app folder"
 
-curl -o /tmp/backend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip &>>$LOG_FILE
-VALIDATE $? "Downloading backend application code"
+curl -o /tmp/backend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
+VALIDATE $? "downloading backend code"
 
 cd /app
-rm -rf /app/* # remove the existing code
-unzip /tmp/backend.zip &>>$LOG_FILE
-VALIDATE $? "Extracting backend application code"
+unzip /tmp/backend.zip
+VALIDATE $? "Extracting backend code"
 
-npm install &>>$LOG_FILE
-cp /home/ec2-user/expense-shell/backend.service /etc/systemd/system/backend.service
+cd /app
+npm install
+VALIDATE $? "npm installed"
 
-# load the data before running backend
+cp /home/ec2-user/expense-shell-practice/backend.service /etc/systemd/system/backend.service
+VALIDATE $? "copy backend service"
 
-dnf install mysql -y &>>$LOG_FILE
-VALIDATE $? "Installing MySQL Client"
+dnf install mysql -y
+VALIDATE $? "mysql client install"
 
-mysql -h mysql.venra.online -uroot -pExpenseApp@1 < /app/schema/backend.sql &>>$LOG_FILE
+mysql -h mysql.venra.online -uroot -pExpenseApp@1 < /app/schema/backend.sql
 VALIDATE $? "Schema loading"
 
-systemctl daemon-reload &>>$LOG_FILE
-VALIDATE $? "Daemon reload"
+systemctl daemon-reload
+VALIDATE $? "daemon reload"
 
-systemctl enable backend &>>$LOG_FILE
+systemctl enable backend
 VALIDATE $? "Enabled backend"
 
-systemctl restart backend &>>$LOG_FILE
-VALIDATE $? "Restarted Backend"
+systemctl restart backend
+VALIDATE $? "restart backend"
