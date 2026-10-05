@@ -47,14 +47,14 @@ VALIDATE $? "start nginx"
 rm -rf /usr/share/nginx/html/* &>> $LOG_FILE
 VALIDATE $? "Delete existing content in html"
 
-curl -o /tmp/frontend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip &>> $LOG_FILE
+curl -o /tmp/frontend.tar.gz https://raw.githubusercontent.com/daws-92s/expense-documentation/refs/heads/main/artifacts/expense-frontend-v5.tar.gz &>> $LOG_FILE
 VALIDATE $? "Downloading fronr end code"
 
 cd /usr/share/nginx/html
-unzip /tmp/frontend.zip &>> $LOG_FILE
+tar -xzf /tmp/frontend.tar.gz &>> $LOG_FILE
 VALIDATE $? "unziping code"
 
-cp /home/ec2-user/expense-shell-practice/expense.conf /etc/nginx/default.d/expense.conf &>> $LOG_FILE
+cp -R /home/ec2-user/expense-shell-practice/expense.conf /etc/nginx/default.d/expense.conf &>> $LOG_FILE
 VALIDATE $? "copying expense conf"
 
 systemctl restart nginx
